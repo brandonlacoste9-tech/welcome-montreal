@@ -16,6 +16,7 @@ en: {
   "events.f_show": "Shows", "events.f_fest": "Festivals",
   "events.v_list": "List", "events.v_cal": "Calendar",
   "events.search": "Search events…",
+  "events.more": "Show more",
   "events.note": "Listings refresh every morning. Always confirm times with the venue before heading out.",
   "events.empty": "No events in this category right now — check back tomorrow.",
   "events.tickets": "Tickets & info",
@@ -158,6 +159,7 @@ fr: {
   "events.f_show": "Spectacles", "events.f_fest": "Festivals",
   "events.v_list": "Liste", "events.v_cal": "Calendrier",
   "events.search": "Rechercher un événement…",
+  "events.more": "Afficher plus",
   "events.note": "La liste est actualisée chaque matin. Confirmez toujours les horaires avec la salle avant de vous déplacer.",
   "events.empty": "Aucun événement dans cette catégorie pour le moment — revenez demain.",
   "events.tickets": "Billets & infos",
@@ -298,6 +300,7 @@ const MONTH_FULL = {
 };
 let searchQuery = '';
 let view = 'list';
+let visibleCount = 12;
 let calYear = null, calMonth = null, selectedDay = null;
 const WD_FULL = {
   en: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
@@ -420,8 +423,9 @@ function renderEvents(){
     grid.innerHTML = '<p class="events-empty">' + t('events.empty') + '</p>';
     return;
   }
+  const shown = list.slice(0, visibleCount);
   let html = '', lastKey = '';
-  list.forEach(e => {
+  shown.forEach(e => {
     const d = new Date(e.date + 'T12:00:00');
     const key = d.getFullYear() + '-' + d.getMonth();
     if(key !== lastKey){
@@ -430,6 +434,9 @@ function renderEvents(){
     }
     html += eventCard(e);
   });
+  if(list.length > visibleCount){
+    html += '<button class="btn btn-outline show-more" id="showMoreBtn">' + t('events.more') + ' (' + (list.length - visibleCount) + ')</button>';
+  }
   grid.innerHTML = html;
 }
 
@@ -451,6 +458,7 @@ document.getElementById('eventsGrid').addEventListener('click', (ev) => {
 });
 document.getElementById('eventSearch').addEventListener('input', (ev) => {
   searchQuery = ev.target.value;
+  visibleCount = 12;
   renderEvents();
 });
 document.getElementById('viewListBtn').addEventListener('click', () => {
@@ -466,6 +474,11 @@ document.getElementById('viewCalBtn').addEventListener('click', () => {
   renderEvents();
 });
 document.getElementById('eventsGrid').addEventListener('click', (ev) => {
+  if(ev.target.closest('#showMoreBtn')){
+    visibleCount += 12;
+    renderEvents();
+    return;
+  }
   const prev = ev.target.closest('#calPrev');
   const next = ev.target.closest('#calNext');
   const now = new Date();
@@ -486,9 +499,10 @@ document.getElementById('eventsGrid').addEventListener('click', (ev) => {
 document.getElementById('filterRow').addEventListener('click', (ev) => {
   const btn = ev.target.closest('.filter-btn');
   if(!btn) return;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#filterRow .filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   activeFilter = btn.getAttribute('data-filter');
+  visibleCount = 12;
   renderEvents();
 });
 
