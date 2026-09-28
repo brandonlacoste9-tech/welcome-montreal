@@ -344,7 +344,8 @@ function eventCard(e){
   const note = lang === 'fr' ? (e.note_fr || e.note) : e.note;
   const cat = (CAT_LABEL[e.category] && CAT_LABEL[e.category][lang]) || e.category;
   const link = e.url ? '<a class="event-link" href="' + e.url + '" target="_blank" rel="noopener">' + t('events.tickets') + '</a>' : '';
-  const thumb = e.image ? '<img class="event-thumb" src="' + e.image + '" alt="" loading="lazy" onerror="this.remove()">' : '';
+  const thumb = '<span class="event-thumbwrap"><span class="event-thumb event-thumb--ph"><span>' + day + '</span></span>' +
+    (e.image ? '<img class="event-thumb event-thumb--img" src="' + e.image + '" alt="" loading="lazy" onerror="this.remove()">' : '') + '</span>';
   const cardCls = e.url ? 'event-card has-link' : 'event-card';
   const cardUrl = e.url ? ' data-url="' + e.url.replace(/"/g, '&quot;') + '"' : '';
   return '<article class="' + cardCls + '"' + cardUrl + '>' + thumb +
