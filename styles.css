@@ -54,14 +54,15 @@ main{counter-reset:mag}
 .hero .btn-ghost:hover{background:rgba(250,247,241,.14);border-color:var(--ivory)}
 .hero-dateline{font-size:.74rem;letter-spacing:1.4px;text-transform:uppercase;color:rgba(250,247,241,.66)}
 
-/* Category index */
-.categories{padding:40px 0 10px}
-.cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
-.cat-card{text-decoration:none;padding:22px 18px;display:flex;flex-direction:column;gap:10px;border-left:1px solid var(--line);transition:background .18s}
+/* Category index — sandalwood / cognac band */
+.categories{padding:0;background:linear-gradient(120deg,#c99a63 0%,#a0683a 45%,#7e4426 100%)}
+.categories .container{max-width:none;padding:0}
+.cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid rgba(250,247,241,.35);max-width:1080px;margin:0 auto}
+.cat-card{text-decoration:none;padding:30px 22px;display:flex;flex-direction:column;gap:10px;border-left:1px solid rgba(250,247,241,.28);transition:background .18s;color:var(--ivory)}
 .cat-card:first-child{border-left:0}
-.cat-card:hover{background:var(--paper)}
-.cat-num{font-family:var(--serif);font-style:italic;font-size:1.6rem;color:var(--gold)}
-.cat-card span:last-child{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1.6px}
+.cat-card:hover{background:rgba(20,12,6,.22)}
+.cat-num{font-family:var(--serif);font-style:italic;font-size:1.9rem;color:#f4e3c2}
+.cat-card span:last-child{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1.8px;color:var(--ivory)}
 
 /* Sections */
 section{padding:72px 0}
@@ -178,9 +179,9 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,4.6vw,3rem);let
   .main-nav.open{display:flex}
   .menu-toggle{display:block}
   .cat-grid{grid-template-columns:repeat(2,1fr)}
-  .cat-card{border-left:0;border-top:1px solid var(--line)}
+  .cat-card{border-left:0;border-top:1px solid rgba(250,247,241,.28)}
   .cat-card:nth-child(-n+2){border-top:0}
-  .cat-card:nth-child(even){border-left:1px solid var(--line)}
+  .cat-card:nth-child(even){border-left:1px solid rgba(250,247,241,.28)}
   .dir-split,.dir-split.reverse{grid-template-columns:1fr}
   .dir-split.reverse .dir-img{order:0}
   .sports-grid{grid-template-columns:1fr}
