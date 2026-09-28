@@ -72,8 +72,7 @@ h2{font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-.5px;margin-bottom:18px}
 .events-empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:30px}
 
 /* Directory */
-.dir-split{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
-.dir-split.reverse .dir-img{order:2}
+.dir-split{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}.dir-split.reverse .dir-img{order:2}
 .dir-img img{border-radius:18px;box-shadow:0 16px 40px rgba(13,27,42,.16);aspect-ratio:4/3;object-fit:cover;width:100%}
 .directory.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .dir-list{list-style:none;display:flex;flex-direction:column;gap:14px}
@@ -81,6 +80,19 @@ h2{font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-.5px;margin-bottom:18px}
 .directory.alt .dir-list li{background:var(--paper)}
 .dir-list strong{display:block;font-size:1.02rem;margin-bottom:2px}
 .dir-list span{font-size:.92rem;color:var(--muted)}
+
+/* Food guide */
+.food-group{font-size:1.05rem;margin:34px 0 16px;color:var(--navy);letter-spacing:.4px}
+.food-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.food-card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:box-shadow .15s}
+.food-card:hover{box-shadow:0 8px 20px rgba(13,27,42,.08)}
+.food-card img{width:100%;height:170px;object-fit:cover;display:block}
+.food-body{padding:16px 18px 18px}
+.food-tags{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--red);margin-bottom:8px}
+.food-body h4{font-size:1.08rem;margin-bottom:6px}
+.food-body p{font-size:.92rem;color:var(--muted)}
+.food-dish{margin-top:10px;font-size:.88rem}
+.food-dish span:first-child{font-weight:700;color:var(--navy)}
 
 /* Sports */
 .sports-band{background:var(--navy);color:#fff}
