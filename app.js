@@ -15,7 +15,7 @@ en: {
   "events.f_all": "All", "events.f_concert": "Concerts", "events.f_sport": "Sports",
   "events.f_show": "Shows", "events.f_fest": "Festivals",
   "events.v_list": "List", "events.v_cal": "Calendar",
-  "events.search": "Search events…",
+  "events.search": "Search events, dates, \u2018weekend\u2019\u2026",
   "events.more": "Show more",
   "events.note": "Listings refresh every morning. Always confirm times with the venue before heading out.",
   "events.empty": "No events in this category right now — check back tomorrow.",
@@ -158,7 +158,7 @@ fr: {
   "events.f_all": "Tous", "events.f_concert": "Concerts", "events.f_sport": "Sports",
   "events.f_show": "Spectacles", "events.f_fest": "Festivals",
   "events.v_list": "Liste", "events.v_cal": "Calendrier",
-  "events.search": "Rechercher un événement…",
+  "events.search": "Rechercher : nom, date, \u00ab fin de semaine \u00bb\u2026",
   "events.more": "Afficher plus",
   "events.note": "La liste est actualisée chaque matin. Confirmez toujours les horaires avec la salle avant de vous déplacer.",
   "events.empty": "Aucun événement dans cette catégorie pour le moment — revenez demain.",
@@ -299,7 +299,7 @@ const MONTH_FULL = {
   fr: ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']
 };
 let searchQuery = '';
-let view = 'list';
+let view = 'cal';
 let visibleCount = 12;
 let calYear = null, calMonth = null, selectedDay = null;
 const WD_FULL = {
@@ -349,6 +349,24 @@ function eventCard(e){
     '<p class="event-meta">' + e.venue + (note ? ' · ' + note : '') + '</p>' + link + '</div></article>';
 }
 
+function dateQueryRange(q){
+  const t = new Date(); t.setHours(0,0,0,0);
+  const iso = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  const add = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+  if(/^(today|tonight)$/.test(q) || q.includes('ce soir') || q.includes("aujourd")) return [iso(t), iso(t)];
+  if(q === 'tomorrow' || q.includes('demain')){ const d = add(t,1); return [iso(d), iso(d)]; }
+  if(q.includes('this week') || q.includes('cette semaine') || q === 'week' || q === 'semaine') return [iso(t), iso(add(t,7))];
+  if(q.includes('weekend') || q.includes('fin de semaine')){
+    const dow = t.getDay();
+    let fri;
+    if(dow === 0) fri = add(t,-2);
+    else if(dow === 6) fri = add(t,-1);
+    else fri = add(t, 5 - dow);
+    return [iso(fri), iso(add(fri,2))];
+  }
+  return null;
+}
+
 function filteredEvents(){
   const today = new Date(); today.setHours(0,0,0,0);
   const q = searchQuery.trim().toLowerCase();
@@ -356,7 +374,10 @@ function filteredEvents(){
     .filter(e => activeFilter === 'all' || e.category === activeFilter)
     .filter(e => new Date(e.date + 'T12:00:00') >= today)
     .sort((a,b) => a.date.localeCompare(b.date));
-  if(q){
+  const dq = q ? dateQueryRange(q) : null;
+  if(dq){
+    list = list.filter(e => e.date >= dq[0] && e.date <= dq[1]);
+  } else if(q){
     list = list.filter(e => {
       const d = new Date(e.date + 'T12:00:00');
       const m = d.getMonth();
@@ -459,6 +480,12 @@ document.getElementById('eventsGrid').addEventListener('click', (ev) => {
 document.getElementById('eventSearch').addEventListener('input', (ev) => {
   searchQuery = ev.target.value;
   visibleCount = 12;
+  const q = searchQuery.trim().toLowerCase();
+  const dq = q ? dateQueryRange(q) : null;
+  if(dq){
+    const d = new Date(dq[0] + 'T12:00:00');
+    calYear = d.getFullYear(); calMonth = d.getMonth(); selectedDay = null;
+  }
   renderEvents();
 });
 document.getElementById('viewListBtn').addEventListener('click', () => {
