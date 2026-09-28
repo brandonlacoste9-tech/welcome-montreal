@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Welcome to Montreal — Events, Food, Nightlife & More</title>
 <meta name="description" content="Your living guide to Montreal: concerts, sports, restaurants, pubs, nightlife and attractions — updated daily.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -33,9 +36,11 @@
 
 <main>
   <section class="hero">
-    <img src="images/hero-skyline.jpg" alt="Montreal skyline at dusk" class="hero-img">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
+    <div class="container">
+      <div class="masthead-meta">
+        <span data-i18n="hero.issue">Nº 01 — Autumn 2026</span>
+        <span data-i18n="hero.edition">The insider's edition</span>
+      </div>
       <p class="hero-kicker" data-i18n="hero.kicker">The city, live</p>
       <h1 data-i18n="hero.title">Welcome to Montreal</h1>
       <p class="hero-sub" data-i18n="hero.sub">Concerts, games, restaurants, pubs, nightlife and landmarks — one guide that updates itself every day.</p>
@@ -43,7 +48,13 @@
         <a href="#events" class="btn btn-primary" data-i18n="hero.cta1">See what's on</a>
         <a href="#hotels" class="btn btn-ghost" data-i18n="hero.cta2">Put this in your hotel</a>
       </div>
-      <p class="hero-updated"><span data-i18n="hero.updated">Events updated</span>: <span id="eventsUpdated">—</span></p>
+      <figure class="hero-figure">
+        <img src="images/hero-skyline.jpg" alt="Montreal skyline at dusk">
+        <figcaption>
+          <span data-i18n="hero.caption">The skyline at dusk, from the Old Port</span>
+          <span class="dateline"><span data-i18n="hero.updated">Events updated</span>: <span id="eventsUpdated">—</span></span>
+        </figcaption>
+      </figure>
     </div>
   </section>
 
