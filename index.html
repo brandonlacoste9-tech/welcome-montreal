@@ -66,6 +66,11 @@
           <p class="section-kicker" data-i18n="events.kicker">Auto-updated daily</p>
           <h2 data-i18n="events.title">What's on in Montreal</h2>
         </div>
+        <div class="events-toolbar">
+        <div class="view-toggle">
+          <button class="filter-btn active" id="viewListBtn" data-i18n="events.v_list">List</button>
+          <button class="filter-btn" id="viewCalBtn" data-i18n="events.v_cal">Calendar</button>
+        </div>
         <div class="filter-row" id="filterRow">
           <button class="filter-btn active" data-filter="all" data-i18n="events.f_all">All</button>
           <button class="filter-btn" data-filter="concert" data-i18n="events.f_concert">Concerts</button>
@@ -73,6 +78,7 @@
           <button class="filter-btn" data-filter="show" data-i18n="events.f_show">Shows</button>
           <button class="filter-btn" data-filter="festival" data-i18n="events.f_fest">Festivals</button>
           <input type="search" id="eventSearch" class="event-search" data-i18n-ph="events.search" placeholder="Search events…">
+        </div>
         </div>
       </div>
       <div class="events-grid" id="eventsGrid"></div>

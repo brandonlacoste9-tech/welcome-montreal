@@ -14,6 +14,7 @@ en: {
   "events.title": "What's on in Montreal",
   "events.f_all": "All", "events.f_concert": "Concerts", "events.f_sport": "Sports",
   "events.f_show": "Shows", "events.f_fest": "Festivals",
+  "events.v_list": "List", "events.v_cal": "Calendar",
   "events.search": "Search events…",
   "events.note": "Listings refresh every morning. Always confirm times with the venue before heading out.",
   "events.empty": "No events in this category right now — check back tomorrow.",
@@ -155,6 +156,7 @@ fr: {
   "events.title": "À l'affiche à Montréal",
   "events.f_all": "Tous", "events.f_concert": "Concerts", "events.f_sport": "Sports",
   "events.f_show": "Spectacles", "events.f_fest": "Festivals",
+  "events.v_list": "Liste", "events.v_cal": "Calendrier",
   "events.search": "Rechercher un événement…",
   "events.note": "La liste est actualisée chaque matin. Confirmez toujours les horaires avec la salle avant de vous déplacer.",
   "events.empty": "Aucun événement dans cette catégorie pour le moment — revenez demain.",
@@ -295,6 +297,16 @@ const MONTH_FULL = {
   fr: ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']
 };
 let searchQuery = '';
+let view = 'list';
+let calYear = null, calMonth = null, selectedDay = null;
+const WD_FULL = {
+  en: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+  fr: ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi']
+};
+const WD_SHORT = {
+  en: ['Su','Mo','Tu','We','Th','Fr','Sa'],
+  fr: ['Di','Lu','Ma','Me','Je','Ve','Sa']
+};
 
 function t(key){ return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key; }
 
@@ -334,8 +346,7 @@ function eventCard(e){
     '<p class="event-meta">' + e.venue + (note ? ' · ' + note : '') + '</p>' + link + '</div></article>';
 }
 
-function renderEvents(){
-  const grid = document.getElementById('eventsGrid');
+function filteredEvents(){
   const today = new Date(); today.setHours(0,0,0,0);
   const q = searchQuery.trim().toLowerCase();
   let list = eventsData.events
@@ -351,6 +362,60 @@ function renderEvents(){
       return hay.includes(q);
     });
   }
+  return list;
+}
+
+function fmtDayLong(iso){
+  const d = new Date(iso + 'T12:00:00');
+  const wd = WD_FULL[lang][d.getDay()];
+  const mon = MONTH_FULL[lang][d.getMonth()];
+  return lang === 'fr' ? wd + ' ' + d.getDate() + ' ' + mon + ' ' + d.getFullYear()
+                       : wd + ', ' + mon + ' ' + d.getDate() + ', ' + d.getFullYear();
+}
+
+function renderCalendar(){
+  const grid = document.getElementById('eventsGrid');
+  const now = new Date();
+  if(calYear === null){ calYear = now.getFullYear(); calMonth = now.getMonth(); }
+  const y = calYear, m = calMonth;
+  const startDay = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const prefix = y + '-' + String(m + 1).padStart(2, '0') + '-';
+  const byDay = {};
+  filteredEvents().forEach(e => {
+    if(e.date.startsWith(prefix)) (byDay[e.date] = byDay[e.date] || []).push(e);
+  });
+  let html = '<div class="cal-wrap"><div class="cal-head">' +
+    '<button class="cal-nav" id="calPrev" aria-label="Previous month">&lsaquo;</button>' +
+    '<h3>' + MONTH_FULL[lang][m] + ' ' + y + '</h3>' +
+    '<button class="cal-nav" id="calNext" aria-label="Next month">&rsaquo;</button></div>';
+  html += '<div class="cal-grid">' + WD_SHORT[lang].map(w => '<div class="cal-wd">' + w + '</div>').join('');
+  for(let i = 0; i < startDay; i++) html += '<div class="cal-day empty"></div>';
+  for(let d = 1; d <= daysInMonth; d++){
+    const ds = prefix + String(d).padStart(2, '0');
+    const n = (byDay[ds] || []).length;
+    const isPast = new Date(ds + 'T12:00:00') < today;
+    let cls = 'cal-day' + (isPast ? ' past' : '') + (n ? ' has-events' : '') + (selectedDay === ds ? ' selected' : '');
+    html += '<div class="' + cls + '"' + (n ? ' data-day="' + ds + '"' : '') + '>' +
+      '<span class="cal-num">' + d + '</span>' + (n ? '<span class="cal-count">' + n + '</span>' : '') + '</div>';
+  }
+  html += '</div></div>';
+  const showDay = selectedDay && selectedDay.startsWith(prefix) ? selectedDay : null;
+  const list = showDay ? (byDay[showDay] || []) : Object.keys(byDay).sort().reduce((a,k) => a.concat(byDay[k]), []);
+  if(!list.length){
+    html += '<p class="events-empty">' + t('events.empty') + '</p>';
+  } else {
+    if(showDay) html += '<h3 class="month-head">' + fmtDayLong(showDay) + '</h3>';
+    html += list.map(eventCard).join('');
+  }
+  grid.innerHTML = html;
+}
+
+function renderEvents(){
+  if(view === 'cal'){ renderCalendar(); return; }
+  const grid = document.getElementById('eventsGrid');
+  const list = filteredEvents();
   if(!list.length){
     grid.innerHTML = '<p class="events-empty">' + t('events.empty') + '</p>';
     return;
@@ -387,6 +452,36 @@ document.getElementById('eventsGrid').addEventListener('click', (ev) => {
 document.getElementById('eventSearch').addEventListener('input', (ev) => {
   searchQuery = ev.target.value;
   renderEvents();
+});
+document.getElementById('viewListBtn').addEventListener('click', () => {
+  view = 'list';
+  document.getElementById('viewListBtn').classList.add('active');
+  document.getElementById('viewCalBtn').classList.remove('active');
+  renderEvents();
+});
+document.getElementById('viewCalBtn').addEventListener('click', () => {
+  view = 'cal'; selectedDay = null;
+  document.getElementById('viewCalBtn').classList.add('active');
+  document.getElementById('viewListBtn').classList.remove('active');
+  renderEvents();
+});
+document.getElementById('eventsGrid').addEventListener('click', (ev) => {
+  const prev = ev.target.closest('#calPrev');
+  const next = ev.target.closest('#calNext');
+  const now = new Date();
+  if(prev || next){
+    let y = calYear, m = calMonth + (next ? 1 : -1);
+    if(m < 0){ m = 11; y--; } if(m > 11){ m = 0; y++; }
+    if(y < now.getFullYear() || (y === now.getFullYear() && m < now.getMonth())){ y = now.getFullYear(); m = now.getMonth(); }
+    calYear = y; calMonth = m; selectedDay = null;
+    renderEvents(); return;
+  }
+  const day = ev.target.closest('.cal-day[data-day]');
+  if(day){
+    const ds = day.getAttribute('data-day');
+    selectedDay = (selectedDay === ds) ? null : ds;
+    renderEvents();
+  }
 });
 document.getElementById('filterRow').addEventListener('click', (ev) => {
   const btn = ev.target.closest('.filter-btn');
