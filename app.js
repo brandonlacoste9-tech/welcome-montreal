@@ -150,7 +150,8 @@ function renderEvents(){
     const note = lang === 'fr' ? (e.note_fr || e.note) : e.note;
     const cat = (CAT_LABEL[e.category] && CAT_LABEL[e.category][lang]) || e.category;
     const link = e.url ? '<a class="event-link" href="' + e.url + '" target="_blank" rel="noopener">' + t('events.tickets') + '</a>' : '';
-    return '<article class="event-card">' +
+    const thumb = e.image ? '<img class="event-thumb" src="' + e.image + '" alt="" loading="lazy" onerror="this.remove()">' : '';
+    return '<article class="event-card">' + thumb +
       '<div class="event-date"><div class="d">' + day + '</div><div class="m">' + mon + '</div></div>' +
       '<div class="event-info"><span class="event-tag">' + cat + '</span><h3>' + name + '</h3>' +
       '<p class="event-meta">' + e.venue + (note ? ' · ' + note : '') + '</p>' + link + '</div></article>';
