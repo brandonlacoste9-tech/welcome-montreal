@@ -14,6 +14,7 @@ en: {
   "events.title": "What's on in Montreal",
   "events.f_all": "All", "events.f_concert": "Concerts", "events.f_sport": "Sports",
   "events.f_show": "Shows", "events.f_fest": "Festivals",
+  "events.search": "Search events…",
   "events.note": "Listings refresh every morning. Always confirm times with the venue before heading out.",
   "events.empty": "No events in this category right now — check back tomorrow.",
   "events.tickets": "Tickets & info",
@@ -154,6 +155,7 @@ fr: {
   "events.title": "À l'affiche à Montréal",
   "events.f_all": "Tous", "events.f_concert": "Concerts", "events.f_sport": "Sports",
   "events.f_show": "Spectacles", "events.f_fest": "Festivals",
+  "events.search": "Rechercher un événement…",
   "events.note": "La liste est actualisée chaque matin. Confirmez toujours les horaires avec la salle avant de vous déplacer.",
   "events.empty": "Aucun événement dans cette catégorie pour le moment — revenez demain.",
   "events.tickets": "Billets & infos",
@@ -288,6 +290,11 @@ const MONTHS = {
   en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
   fr: ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.']
 };
+const MONTH_FULL = {
+  en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+  fr: ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']
+};
+let searchQuery = '';
 
 function t(key){ return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key; }
 
@@ -296,6 +303,9 @@ function applyLang(){
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     el.innerHTML = t(key);
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph')));
   });
   document.getElementById('langToggle').textContent = lang === 'en' ? 'FR' : 'EN';
   document.title = lang === 'en'
@@ -309,31 +319,53 @@ function fmtDate(iso){
   return { day: d.getDate(), mon: MONTHS[lang][d.getMonth()] };
 }
 
+function eventCard(e){
+  const {day, mon} = fmtDate(e.date);
+  const name = lang === 'fr' ? (e.name_fr || e.name) : e.name;
+  const note = lang === 'fr' ? (e.note_fr || e.note) : e.note;
+  const cat = (CAT_LABEL[e.category] && CAT_LABEL[e.category][lang]) || e.category;
+  const link = e.url ? '<a class="event-link" href="' + e.url + '" target="_blank" rel="noopener">' + t('events.tickets') + '</a>' : '';
+  const thumb = e.image ? '<img class="event-thumb" src="' + e.image + '" alt="" loading="lazy" onerror="this.remove()">' : '';
+  const cardCls = e.url ? 'event-card has-link' : 'event-card';
+  const cardUrl = e.url ? ' data-url="' + e.url.replace(/"/g, '&quot;') + '"' : '';
+  return '<article class="' + cardCls + '"' + cardUrl + '>' + thumb +
+    '<div class="event-date"><div class="d">' + day + '</div><div class="m">' + mon + '</div></div>' +
+    '<div class="event-info"><span class="event-tag">' + cat + '</span><h3>' + name + '</h3>' +
+    '<p class="event-meta">' + e.venue + (note ? ' · ' + note : '') + '</p>' + link + '</div></article>';
+}
+
 function renderEvents(){
   const grid = document.getElementById('eventsGrid');
   const today = new Date(); today.setHours(0,0,0,0);
-  const list = eventsData.events
+  const q = searchQuery.trim().toLowerCase();
+  let list = eventsData.events
     .filter(e => activeFilter === 'all' || e.category === activeFilter)
     .filter(e => new Date(e.date + 'T12:00:00') >= today)
     .sort((a,b) => a.date.localeCompare(b.date));
+  if(q){
+    list = list.filter(e => {
+      const d = new Date(e.date + 'T12:00:00');
+      const m = d.getMonth();
+      const dateBits = e.date + ' ' + d.getDate() + ' ' + MONTH_FULL.en[m] + ' ' + MONTHS.en[m] + ' ' + MONTH_FULL.fr[m] + ' ' + MONTHS.fr[m];
+      const hay = ((e.name||'') + ' ' + (e.name_fr||'') + ' ' + (e.venue||'') + ' ' + (e.note||'') + ' ' + (e.note_fr||'') + ' ' + dateBits).toLowerCase();
+      return hay.includes(q);
+    });
+  }
   if(!list.length){
     grid.innerHTML = '<p class="events-empty">' + t('events.empty') + '</p>';
     return;
   }
-  grid.innerHTML = list.map(e => {
-    const {day, mon} = fmtDate(e.date);
-    const name = lang === 'fr' ? (e.name_fr || e.name) : e.name;
-    const note = lang === 'fr' ? (e.note_fr || e.note) : e.note;
-    const cat = (CAT_LABEL[e.category] && CAT_LABEL[e.category][lang]) || e.category;
-    const link = e.url ? '<a class="event-link" href="' + e.url + '" target="_blank" rel="noopener">' + t('events.tickets') + '</a>' : '';
-    const thumb = e.image ? '<img class="event-thumb" src="' + e.image + '" alt="" loading="lazy" onerror="this.remove()">' : '';
-    const cardCls = e.url ? 'event-card has-link' : 'event-card';
-    const cardUrl = e.url ? ' data-url="' + e.url.replace(/"/g, '&quot;') + '"' : '';
-    return '<article class="' + cardCls + '"' + cardUrl + '>' + thumb +
-      '<div class="event-date"><div class="d">' + day + '</div><div class="m">' + mon + '</div></div>' +
-      '<div class="event-info"><span class="event-tag">' + cat + '</span><h3>' + name + '</h3>' +
-      '<p class="event-meta">' + e.venue + (note ? ' · ' + note : '') + '</p>' + link + '</div></article>';
-  }).join('');
+  let html = '', lastKey = '';
+  list.forEach(e => {
+    const d = new Date(e.date + 'T12:00:00');
+    const key = d.getFullYear() + '-' + d.getMonth();
+    if(key !== lastKey){
+      lastKey = key;
+      html += '<h3 class="month-head">' + MONTH_FULL[lang][d.getMonth()] + ' ' + d.getFullYear() + '</h3>';
+    }
+    html += eventCard(e);
+  });
+  grid.innerHTML = html;
 }
 
 document.getElementById('langToggle').addEventListener('click', () => {
@@ -351,6 +383,10 @@ document.getElementById('eventsGrid').addEventListener('click', (ev) => {
   if (ev.target.closest('a')) return;
   const card = ev.target.closest('.event-card[data-url]');
   if (card) window.open(card.getAttribute('data-url'), '_blank', 'noopener');
+});
+document.getElementById('eventSearch').addEventListener('input', (ev) => {
+  searchQuery = ev.target.value;
+  renderEvents();
 });
 document.getElementById('filterRow').addEventListener('click', (ev) => {
   const btn = ev.target.closest('.filter-btn');
