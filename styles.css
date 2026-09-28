@@ -178,6 +178,32 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,4.6vw,3rem);let
 .card-link{text-decoration:none;color:inherit;display:block;cursor:pointer}
 .event-card.has-link{cursor:pointer}
 
+/* Weather strip */
+.weather-strip{display:flex;align-items:center;gap:20px;flex-wrap:wrap;border:1px solid var(--ink);background:var(--card);padding:12px 20px;margin-bottom:4px}
+.weather-title{font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.05rem;white-space:nowrap}
+.weather-days{display:flex;gap:26px;flex-wrap:wrap}
+.weather-day{display:flex;align-items:center;gap:10px}
+.weather-day svg{width:32px;height:32px;flex-shrink:0}
+.weather-day .wd{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:1.8px;color:var(--muted)}
+.weather-day .wt{font-family:var(--serif);font-weight:700;font-size:1.02rem;line-height:1.3}
+.weather-day .wp{font-size:.74rem;color:var(--muted)}
+.weather-credit{margin-left:auto;font-size:.8rem;color:var(--muted);font-family:var(--serif);font-style:italic;white-space:nowrap}
+
+/* Map view */
+.map-wrap{grid-column:1/-1;padding:6px 0 10px}
+#eventMap{height:480px;border:1px solid var(--ink);background:var(--paper)}
+#eventMap .leaflet-popup-content-wrapper{border-radius:0;font-family:var(--sans)}
+#eventMap .leaflet-popup-content{font-size:.85rem;line-height:1.55;margin:14px 16px}
+#eventMap .leaflet-popup-content strong{font-family:var(--serif);font-size:1rem}
+#eventMap .leaflet-popup-content a{color:var(--gold);font-weight:700}
+.map-note{margin-top:12px;font-size:.84rem;color:var(--muted);font-family:var(--serif);font-style:italic}
+
+@media(max-width:860px){
+  #eventMap{height:360px}
+  .weather-credit{margin-left:0}
+  .weather-strip{gap:12px}
+}
+
 @media(max-width:860px){
   .main-nav{position:fixed;top:67px;right:0;left:0;background:var(--ivory);flex-direction:column;padding:20px 24px;gap:16px;display:none;border-bottom:1px solid var(--ink)}
   .main-nav.open{display:flex}

@@ -126,6 +126,21 @@ def ts_category(record):
     return "show"
 
 
+def _fnum(v):
+    """Parse a latitude/longitude-ish value; None when missing or invalid."""
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def _with_coords(ev, lat, lon):
+    if lat is not None and lon is not None:
+        ev["lat"] = round(lat, 5)
+        ev["lon"] = round(lon, 5)
+    return ev
+
+
 def ts_start_date(record):
     dates = [p.get("Datedebut", "")[:10]
              for p in (record.get("PeriodeOuvertures") or []) if p.get("Datedebut")]
@@ -152,14 +167,16 @@ def to_tourinsoft_events(data, today, cutoff):
                 url = (s.get("Coordonnees") or "").strip()
                 if url:
                     break
-        out.append({
+        lat = _fnum(adr.get("GmapLatitude") or adr.get("Latitude") or adr.get("latitude"))
+        lon = _fnum(adr.get("GmapLongitude") or adr.get("Longitude") or adr.get("longitude"))
+        out.append(_with_coords({
             "name": name,
             "date": start,
             "venue": venue,
             "category": ts_category(r),
             "url": url,
             "image": "",
-        })
+        }, lat, lon))
     out.sort(key=lambda e: e["date"])
     return out
 
@@ -206,14 +223,16 @@ def to_city_events(rows, today, cutoff):
         if not name:
             continue
         venue = _clean(r.get("titre_adresse")) or _clean(r.get("arrondissement"))
-        out.append({
+        lat = _fnum(r.get("latitude") or r.get("lat"))
+        lon = _fnum(r.get("longitude") or r.get("lon") or r.get("lng"))
+        out.append(_with_coords({
             "name": name,
             "date": start,
             "venue": venue,
             "category": cat,
             "url": _clean(r.get("url_fiche")),
             "image": "",
-        })
+        }, lat, lon))
     out.sort(key=lambda e: e["date"])
     return out
 
@@ -237,15 +256,19 @@ def main():
         raw = (data.get("_embedded") or {}).get("events", [])
         for e in raw:
             try:
-                venue = (e.get("_embedded") or {}).get("venues", [{}])[0].get("name", "")
-                tm_events.append({
+                ven = (e.get("_embedded") or {}).get("venues", [{}])[0]
+                venue = ven.get("name", "")
+                loc = ven.get("location") or {}
+                lat = _fnum(loc.get("latitude"))
+                lon = _fnum(loc.get("longitude"))
+                tm_events.append(_with_coords({
                     "name": e.get("name", ""),
                     "date": (e.get("dates") or {}).get("start", {}).get("localDate", ""),
                     "venue": venue,
                     "category": to_category(e),
                     "url": e.get("url", ""),
                     "image": best_image(e),
-                })
+                }, lat, lon))
             except (KeyError, TypeError):
                 continue
     tm_events = [e for e in tm_events if e["name"] and e["date"]]

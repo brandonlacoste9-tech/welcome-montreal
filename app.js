@@ -16,7 +16,14 @@ en: {
   "events.title": "What's on in Montreal",
   "events.f_all": "All", "events.f_concert": "Concerts", "events.f_sport": "Sports",
   "events.f_show": "Shows", "events.f_fest": "Festivals",
-  "events.v_list": "List", "events.v_cal": "Calendar",
+  "events.v_list": "List", "events.v_cal": "Calendar", "events.v_map": "Map",
+  "weather.title": "This weekend in Montreal",
+  "weather.credit": "Live data · Open-Meteo",
+  "weather.today": "Today",
+  "weather.precip": "chance of precip.",
+  "map.empty": "No mapped events here — try another category.",
+  "map.note": "Pins mark events with venue locations.",
+  "map.noleaflet": "The map could not load — check your connection and try again.",
   "events.search": "Search events, dates, \u2018weekend\u2019\u2026",
   "events.more": "Show more",
   "events.note": "Listings refresh every morning. Always confirm times with the venue before heading out.",
@@ -161,7 +168,14 @@ fr: {
   "events.title": "À l'affiche à Montréal",
   "events.f_all": "Tous", "events.f_concert": "Concerts", "events.f_sport": "Sports",
   "events.f_show": "Spectacles", "events.f_fest": "Festivals",
-  "events.v_list": "Liste", "events.v_cal": "Calendrier",
+  "events.v_list": "Liste", "events.v_cal": "Calendrier", "events.v_map": "Carte",
+  "weather.title": "Ce week-end à Montréal",
+  "weather.credit": "Données en direct · Open-Meteo",
+  "weather.today": "Aujourd'hui",
+  "weather.precip": "risque de précip.",
+  "map.empty": "Aucun événement géolocalisé ici — essayez une autre catégorie.",
+  "map.note": "Les repères indiquent les événements géolocalisés.",
+  "map.noleaflet": "La carte n'a pas pu charger — vérifiez votre connexion.",
   "events.search": "Rechercher : nom, date, \u00ab fin de semaine \u00bb\u2026",
   "events.more": "Afficher plus",
   "events.note": "La liste est actualisée chaque matin. Confirmez toujours les horaires avec la salle avant de vous déplacer.",
@@ -331,6 +345,7 @@ function applyLang(){
     ? 'Welcome to Montreal — Events, Food, Nightlife & More'
     : 'Bienvenue à Montréal — Événements, restos, vie nocturne';
   renderEvents();
+  if(lastWeatherData) renderWeather(lastWeatherData);
 }
 
 function fmtDate(iso){
@@ -394,6 +409,124 @@ function filteredEvents(){
   return list;
 }
 
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+/* ---- Weather strip (Open-Meteo, no key) ---- */
+var WX_ICON = {
+  sun: '<svg viewBox="0 0 24 24" fill="none" stroke="#a67c2e" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5 5l1.8 1.8M17.2 17.2L19 19M19 5l-1.8 1.8M6.8 17.2L5 19"/></svg>',
+  part: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><circle cx="8" cy="8" r="2.8" stroke="#a67c2e"/><path d="M8 2.6v1.7M2.6 8h1.7M4.2 4.2l1.2 1.2M11.8 4.2l-1.2 1.2" stroke="#a67c2e"/><path d="M9 20h9.5a3.5 3.5 0 0 0 .6-6.95A5.5 5.5 0 0 0 8.3 14.6 3 3 0 0 0 9 20z" stroke="#16130d"/></svg>',
+  cloud: '<svg viewBox="0 0 24 24" fill="none" stroke="#16130d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>',
+  fog: '<svg viewBox="0 0 24 24" fill="none" stroke="#7a6f5c" stroke-width="1.8" stroke-linecap="round"><path d="M4 9h16M6 13h12M8 17h8M5 21h14"/></svg>',
+  rain: '<svg viewBox="0 0 24 24" fill="none" stroke="#16130d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><path d="M16 14v3M12 16v3M8 14v3" stroke="#a67c2e"/></svg>',
+  snow: '<svg viewBox="0 0 24 24" fill="none" stroke="#16130d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><path d="M8 15.5h.01M12 17.5h.01M16 15.5h.01M10 20h.01M14 20h.01" stroke="#a67c2e" stroke-width="2.4"/></svg>',
+  storm: '<svg viewBox="0 0 24 24" fill="none" stroke="#16130d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><path d="M13 12l-4.5 6H13l-4.5 6" stroke="#a67c2e"/></svg>'
+};
+/* WMO code -> [icon, en label, fr label] */
+var lastWeatherData = null;
+var WMO = {
+  0:['sun','Clear','Dégagé'], 1:['sun','Mainly clear','Plutôt dégagé'],
+  2:['part','Partly cloudy','Partiellement nuageux'], 3:['cloud','Overcast','Nuageux'],
+  45:['fog','Fog','Brouillard'], 48:['fog','Icy fog','Brouillard givrant'],
+  51:['rain','Light drizzle','Bruine légère'], 53:['rain','Drizzle','Bruine'], 55:['rain','Dense drizzle','Bruine dense'],
+  56:['rain','Freezing drizzle','Bruine verglaçante'], 57:['rain','Freezing drizzle','Bruine verglaçante'],
+  61:['rain','Light rain','Pluie légère'], 63:['rain','Rain','Pluie'], 65:['rain','Heavy rain','Forte pluie'],
+  66:['rain','Freezing rain','Pluie verglaçante'], 67:['rain','Freezing rain','Pluie verglaçante'],
+  71:['snow','Light snow','Neige légère'], 73:['snow','Snow','Neige'], 75:['snow','Heavy snow','Forte neige'],
+  77:['snow','Snow grains','Grains de neige'],
+  80:['rain','Light showers','Averses légères'], 81:['rain','Showers','Averses'], 82:['rain','Violent showers','Fortes averses'],
+  85:['snow','Snow showers','Averses de neige'], 86:['snow','Snow showers','Averses de neige'],
+  95:['storm','Thunderstorm','Orage'], 96:['storm','Storm, hail','Orage, grêle'], 99:['storm','Storm, hail','Orage, grêle']
+};
+
+function renderWeather(d){
+  lastWeatherData = d;
+  var strip = document.getElementById('weatherStrip');
+  var days = document.getElementById('weatherDays');
+  if(!strip || !days || !d || !d.daily || !d.daily.time || !d.daily.time.length) return;
+  var n = Math.min(3, d.daily.time.length), html = '';
+  for(var i = 0; i < n; i++){
+    var w = WMO[d.daily.weather_code[i]] || ['cloud','—','—'];
+    var dt = new Date(d.daily.time[i] + 'T12:00:00');
+    var label = i === 0 ? t('weather.today') : WD_FULL[lang][dt.getDay()];
+    var cond = lang === 'fr' ? w[2] : w[1];
+    var hi = Math.round(d.daily.temperature_2m_max[i]), lo = Math.round(d.daily.temperature_2m_min[i]);
+    var pp = d.daily.precipitation_probability_max[i];
+    pp = (pp === null || pp === undefined) ? 0 : pp;
+    html += '<div class="weather-day" title="' + esc(cond) + '">' + WX_ICON[w[0]] +
+      '<div><div class="wd">' + esc(label) + '</div>' +
+      '<div class="wt">' + hi + '° / ' + lo + '°</div>' +
+      '<div class="wp">' + pp + '% ' + esc(t('weather.precip')) + '</div></div></div>';
+  }
+  days.innerHTML = html;
+  strip.hidden = false;
+}
+
+function loadWeather(){
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=45.50&longitude=-73.57&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=America%2FToronto&forecast_days=3')
+    .then(function(r){ return r.json(); })
+    .then(renderWeather)
+    .catch(function(){ /* strip stays hidden — graceful fallback */ });
+}
+
+/* ---- Map view (Leaflet, no key) ---- */
+var map = null, mapLayer = null;
+var CAT_COLOR = { concert:'#a67c2e', sport:'#2e6b4f', show:'#7e4426', festival:'#a63d2e' };
+
+function setView(v){
+  view = v;
+  if(v === 'cal') selectedDay = null;
+  [['viewListBtn','list'],['viewCalBtn','cal'],['viewMapBtn','map']].forEach(function(pair){
+    document.getElementById(pair[0]).classList.toggle('active', pair[1] === v);
+  });
+  if(v !== 'map' && map){ map.remove(); map = null; mapLayer = null; }
+  renderEvents();
+}
+
+function updateMapMarkers(){
+  if(!map) return;
+  if(mapLayer){ map.removeLayer(mapLayer); mapLayer = null; }
+  var pts = filteredEvents().filter(function(e){ return typeof e.lat === 'number' && typeof e.lon === 'number'; });
+  var note = document.getElementById('mapNote');
+  if(!pts.length){
+    map.setView([45.55, -73.68], 11);
+    if(note) note.textContent = t('map.empty');
+    return;
+  }
+  mapLayer = L.layerGroup(pts.map(function(e){
+    var m = L.circleMarker([e.lat, e.lon], {
+      radius: 8, color: '#fffdf9', weight: 2,
+      fillColor: CAT_COLOR[e.category] || '#a67c2e', fillOpacity: 0.92
+    });
+    var link = e.url ? '<br><a href="' + esc(e.url) + '" target="_blank" rel="noopener">' + esc(t('events.tickets')) + '</a>' : '';
+    m.bindPopup('<strong>' + esc(e.name) + '</strong><br>' + esc(fmtDayLong(e.date)) + '<br>' + esc(e.venue) + link);
+    return m;
+  })).addTo(map);
+  map.fitBounds(mapLayer.getBounds().pad(0.15));
+  if(note) note.textContent = pts.length + ' · ' + t('map.note');
+}
+
+function renderMap(){
+  var grid = document.getElementById('eventsGrid');
+  if(!document.getElementById('eventMap')){
+    grid.innerHTML = '<div class="map-wrap"><div id="eventMap"></div>' +
+      '<p class="map-note" id="mapNote">' + esc(t('map.note')) + '</p></div>';
+  }
+  if(typeof L === 'undefined'){
+    document.getElementById('eventMap').innerHTML = '<p class="events-empty">' + esc(t('map.noleaflet')) + '</p>';
+    return;
+  }
+  if(!map){
+    map = L.map('eventMap', { scrollWheelZoom: false }).setView([45.55, -73.68], 11);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
+      maxZoom: 19
+    }).addTo(map);
+    map.on('click', function(){ map.scrollWheelZoom.enable(); });
+  }
+  setTimeout(function(){ if(map) map.invalidateSize(); }, 60);
+  updateMapMarkers();
+}
+
 function fmtDayLong(iso){
   const d = new Date(iso + 'T12:00:00');
   const wd = WD_FULL[lang][d.getDay()];
@@ -442,6 +575,7 @@ function renderCalendar(){
 }
 
 function renderEvents(){
+  if(view === 'map'){ renderMap(); return; }
   if(view === 'cal'){ renderCalendar(); return; }
   const grid = document.getElementById('eventsGrid');
   const list = filteredEvents();
@@ -493,18 +627,9 @@ document.getElementById('eventSearch').addEventListener('input', (ev) => {
   }
   renderEvents();
 });
-document.getElementById('viewListBtn').addEventListener('click', () => {
-  view = 'list';
-  document.getElementById('viewListBtn').classList.add('active');
-  document.getElementById('viewCalBtn').classList.remove('active');
-  renderEvents();
-});
-document.getElementById('viewCalBtn').addEventListener('click', () => {
-  view = 'cal'; selectedDay = null;
-  document.getElementById('viewCalBtn').classList.add('active');
-  document.getElementById('viewListBtn').classList.remove('active');
-  renderEvents();
-});
+document.getElementById('viewListBtn').addEventListener('click', () => setView('list'));
+document.getElementById('viewCalBtn').addEventListener('click', () => setView('cal'));
+document.getElementById('viewMapBtn').addEventListener('click', () => setView('map'));
 document.getElementById('eventsGrid').addEventListener('click', (ev) => {
   if(ev.target.closest('#showMoreBtn')){
     visibleCount += 12;
@@ -548,5 +673,7 @@ fetch('events.json')
   .catch(() => {
     document.getElementById('eventsGrid').innerHTML = '<p class="events-empty">' + t('events.empty') + '</p>';
   });
+
+loadWeather();
 
 applyLang();
