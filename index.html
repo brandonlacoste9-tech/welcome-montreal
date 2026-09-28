@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to Montreal — Events, Food, Nightlife & More</title>
+<meta name="description" content="Your living guide to Montreal: concerts, sports, restaurants, pubs, nightlife and attractions — updated daily.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header" id="top">
+  <div class="header-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">Mtl</span>
+      <span class="brand-text" data-i18n="brand">Welcome to Montreal</span>
+    </a>
+    <nav class="main-nav" id="mainNav">
+      <a href="#events" data-i18n="nav.events">Events</a>
+      <a href="#eat" data-i18n="nav.eat">Eat &amp; Drink</a>
+      <a href="#nightlife" data-i18n="nav.nightlife">Nightlife</a>
+      <a href="#attractions" data-i18n="nav.attractions">Attractions</a>
+      <a href="#sports" data-i18n="nav.sports">Sports</a>
+      <a href="#hotels" data-i18n="nav.hotels">For Hotels</a>
+    </nav>
+    <div class="header-actions">
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language">FR</button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">&#9776;</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <img src="images/hero-skyline.jpg" alt="Montreal skyline at dusk" class="hero-img">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-kicker" data-i18n="hero.kicker">The city, live</p>
+      <h1 data-i18n="hero.title">Welcome to Montreal</h1>
+      <p class="hero-sub" data-i18n="hero.sub">Concerts, games, restaurants, pubs, nightlife and landmarks — one guide that updates itself every day.</p>
+      <div class="hero-cta">
+        <a href="#events" class="btn btn-primary" data-i18n="hero.cta1">See what's on</a>
+        <a href="#hotels" class="btn btn-ghost" data-i18n="hero.cta2">Put this in your hotel</a>
+      </div>
+      <p class="hero-updated"><span data-i18n="hero.updated">Events updated</span>: <span id="eventsUpdated">—</span></p>
+    </div>
+  </section>
+
+  <section class="categories">
+    <div class="container">
+      <div class="cat-grid">
+        <a href="#events" class="cat-card"><span class="cat-num">01</span><span data-i18n="cat.events">Events &amp; Shows</span></a>
+        <a href="#eat" class="cat-card"><span class="cat-num">02</span><span data-i18n="cat.eat">Eat &amp; Drink</span></a>
+        <a href="#nightlife" class="cat-card"><span class="cat-num">03</span><span data-i18n="cat.nightlife">Pubs &amp; Nightlife</span></a>
+        <a href="#attractions" class="cat-card"><span class="cat-num">04</span><span data-i18n="cat.attractions">Attractions</span></a>
+        <a href="#sports" class="cat-card"><span class="cat-num">05</span><span data-i18n="cat.sports">Sports</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="events-section" id="events">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker" data-i18n="events.kicker">Auto-updated daily</p>
+          <h2 data-i18n="events.title">What's on in Montreal</h2>
+        </div>
+        <div class="filter-row" id="filterRow">
+          <button class="filter-btn active" data-filter="all" data-i18n="events.f_all">All</button>
+          <button class="filter-btn" data-filter="concert" data-i18n="events.f_concert">Concerts</button>
+          <button class="filter-btn" data-filter="sport" data-i18n="events.f_sport">Sports</button>
+          <button class="filter-btn" data-filter="show" data-i18n="events.f_show">Shows</button>
+          <button class="filter-btn" data-filter="festival" data-i18n="events.f_fest">Festivals</button>
+        </div>
+      </div>
+      <div class="events-grid" id="eventsGrid"></div>
+      <p class="events-note" data-i18n="events.note">Listings refresh every morning. Always confirm times with the venue before heading out.</p>
+    </div>
+  </section>
+
+  <section class="directory" id="eat">
+    <div class="container">
+      <div class="dir-split">
+        <div class="dir-img"><img src="images/food.jpg" alt="Montreal food"></div>
+        <div class="dir-body">
+          <p class="section-kicker" data-i18n="eat.kicker">Taste the city</p>
+          <h2 data-i18n="eat.title">Eat &amp; Drink</h2>
+          <ul class="dir-list">
+            <li><strong>Schwartz's Deli</strong><span data-i18n="eat.1">The legendary smoked meat on Saint-Laurent — since 1928.</span></li>
+            <li><strong>Joe Beef</strong><span data-i18n="eat.2">Little Burgundy icon, some of the best plates in Canada.</span></li>
+            <li><strong>La Banquise</strong><span data-i18n="eat.3">Poutine around the clock on Rachel — 30+ varieties.</span></li>
+            <li><strong>Marché Jean-Talon</strong><span data-i18n="eat.4">Little Italy's covered market — produce, cheese, tastings.</span></li>
+            <li><strong>Marché Atwater</strong><span data-i18n="eat.5">Saint-Henri's market hall by the Lachine Canal.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="directory alt" id="nightlife">
+    <div class="container">
+      <div class="dir-split reverse">
+        <div class="dir-img"><img src="images/nightlife.jpg" alt="Montreal nightlife"></div>
+        <div class="dir-body">
+          <p class="section-kicker" data-i18n="night.kicker">After dark</p>
+          <h2 data-i18n="night.title">Pubs &amp; Nightlife</h2>
+          <ul class="dir-list">
+            <li><strong>Crescent Street</strong><span data-i18n="night.1">Downtown's famous strip — pubs, patios and late nights.</span></li>
+            <li><strong>Boulevard Saint-Laurent</strong><span data-i18n="night.2">"The Main" — bars, clubs and music venues for blocks.</span></li>
+            <li><strong>Hurley's Irish Pub</strong><span data-i18n="night.3">A Crescent Street institution for live music and pints.</span></li>
+            <li><strong>Club Soda</strong><span data-i18n="night.4">Historic Saint-Laurent venue for concerts and comedy.</span></li>
+            <li><strong>Upstairs Jazz Bar &amp; Grill</strong><span data-i18n="night.5">One of the top jazz rooms on the planet.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="directory" id="attractions">
+    <div class="container">
+      <div class="dir-split">
+        <div class="dir-img"><img src="images/old-montreal.jpg" alt="Old Montreal"></div>
+        <div class="dir-body">
+          <p class="section-kicker" data-i18n="attr.kicker">See the city</p>
+          <h2 data-i18n="attr.title">Attractions</h2>
+          <ul class="dir-list">
+            <li><strong>Old Montreal &amp; Old Port</strong><span data-i18n="attr.1">Cobblestones, Notre-Dame Basilica and the waterfront.</span></li>
+            <li><strong>Mount Royal Park</strong><span data-i18n="attr.2">The mountain lookout — the best view in the city.</span></li>
+            <li><strong>Biodome &amp; Olympic Park</strong><span data-i18n="attr.3">Five ecosystems under one roof at the old velodrome.</span></li>
+            <li><strong>Oratoire Saint-Joseph</strong><span data-i18n="attr.4">The domed basilica on Westmount's summit.</span></li>
+            <li><strong>Lachine Canal</strong><span data-i18n="attr.5">Bike or stroll the historic waterway to the Old Port.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sports-band" id="sports">
+    <div class="container">
+      <p class="section-kicker light" data-i18n="sports.kicker">Game on</p>
+      <h2 data-i18n="sports.title">Sports in Montreal</h2>
+      <div class="sports-grid">
+        <div class="sport-card"><h3>Canadiens</h3><p data-i18n="sports.1">NHL hockey at the Bell Centre — the loudest building in the league.</p></div>
+        <div class="sport-card"><h3>CF Montréal</h3><p data-i18n="sports.2">MLS soccer at Saputo Stadium in the Olympic Park.</p></div>
+        <div class="sport-card"><h3>Alouettes</h3><p data-i18n="sports.3">CFL football at Percival Molson Stadium on the mountain.</p></div>
+      </div>
+      <p class="sports-note" data-i18n="sports.note">Home games appear in the events feed above as they're announced.</p>
+    </div>
+  </section>
+
+  <section class="hotels" id="hotels">
+    <div class="container">
+      <div class="hotel-card">
+        <div>
+          <p class="section-kicker" data-i18n="hotels.kicker">For hotels &amp; hosts</p>
+          <h2 data-i18n="hotels.title">Put Montreal in every room</h2>
+          <p data-i18n="hotels.body">One QR code on the nightstand gives your guests the whole city — tonight's concerts, the game, where to eat, what to see. Always current, zero printing costs, and it answers the front desk's most-asked question before it's asked.</p>
+          <ul class="hotel-points">
+            <li data-i18n="hotels.p1">Your hotel's branded version with your logo</li>
+            <li data-i18n="hotels.p2">Events refresh automatically every morning</li>
+            <li data-i18n="hotels.p3">Bilingual — English and French out of the box</li>
+          </ul>
+        </div>
+        <div class="hotel-cta">
+          <a class="btn btn-primary" href="mailto:hello@lacostedesigns.com?subject=Hotel%20guide%20QR" data-i18n="hotels.cta">Get your hotel's QR code</a>
+          <p class="hotel-sub" data-i18n="hotels.sub">Pilot program — first hotels get featured placement free.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p><strong data-i18n="brand">Welcome to Montreal</strong> · <span data-i18n="footer.tag">The city, live.</span></p>
+    <p class="footer-small" data-i18n="footer.note">Event listings update daily — confirm details with venues.</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
