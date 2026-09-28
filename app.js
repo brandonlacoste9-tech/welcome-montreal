@@ -327,7 +327,9 @@ function renderEvents(){
     const cat = (CAT_LABEL[e.category] && CAT_LABEL[e.category][lang]) || e.category;
     const link = e.url ? '<a class="event-link" href="' + e.url + '" target="_blank" rel="noopener">' + t('events.tickets') + '</a>' : '';
     const thumb = e.image ? '<img class="event-thumb" src="' + e.image + '" alt="" loading="lazy" onerror="this.remove()">' : '';
-    return '<article class="event-card">' + thumb +
+    const cardCls = e.url ? 'event-card has-link' : 'event-card';
+    const cardUrl = e.url ? ' data-url="' + e.url.replace(/"/g, '&quot;') + '"' : '';
+    return '<article class="' + cardCls + '"' + cardUrl + '>' + thumb +
       '<div class="event-date"><div class="d">' + day + '</div><div class="m">' + mon + '</div></div>' +
       '<div class="event-info"><span class="event-tag">' + cat + '</span><h3>' + name + '</h3>' +
       '<p class="event-meta">' + e.venue + (note ? ' · ' + note : '') + '</p>' + link + '</div></article>';
@@ -345,6 +347,11 @@ document.getElementById('menuToggle').addEventListener('click', () => {
 document.querySelectorAll('#mainNav a').forEach(a => a.addEventListener('click', () => {
   document.getElementById('mainNav').classList.remove('open');
 }));
+document.getElementById('eventsGrid').addEventListener('click', (ev) => {
+  if (ev.target.closest('a')) return;
+  const card = ev.target.closest('.event-card[data-url]');
+  if (card) window.open(card.getAttribute('data-url'), '_blank', 'noopener');
+});
 document.getElementById('filterRow').addEventListener('click', (ev) => {
   const btn = ev.target.closest('.filter-btn');
   if(!btn) return;

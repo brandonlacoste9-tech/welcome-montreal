@@ -131,3 +131,8 @@ h2{font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-.5px;margin-bottom:18px}
   .hotel-card{grid-template-columns:1fr;padding:32px 24px}
   .hero{min-height:70vh}
 }
+
+/* clickable cards */
+.card-link{text-decoration:none;color:inherit;display:block;cursor:pointer}
+.card-link h4,.card-link h3{color:inherit}
+.event-card.has-link{cursor:pointer}
