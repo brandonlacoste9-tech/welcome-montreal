@@ -16,7 +16,7 @@ body::after{content:"";position:fixed;inset:0;z-index:200;pointer-events:none;op
 img{display:block;max-width:100%}
 a{color:inherit}
 ::selection{background:var(--gold);color:#fff}
-main{counter-reset:mag}
+main{counter-reset:mag;background:linear-gradient(180deg,#f4ecdc 0%,#eadcbf 32%,#dcc49c 66%,#c6a173 100%)}
 
 /* Header — masthead bar */
 .site-header{position:sticky;top:0;z-index:50;background:rgba(250,247,241,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--ink)}
@@ -74,7 +74,7 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,4.6vw,3rem);let
 .section-rule{border:0;border-top:1px solid var(--ink);margin:0 0 34px}
 
 /* Events */
-.events-section{background:var(--card);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.events-section{background:transparent;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
 .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:8px}
 .events-toolbar{display:flex;flex-direction:column;gap:10px;align-items:flex-end}
 .view-toggle{display:flex;gap:0;border:1px solid var(--ink)}
@@ -127,7 +127,7 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,4.6vw,3rem);let
 .dir-split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
 .dir-split.reverse .dir-img{order:2}
 .dir-img img{box-shadow:0 20px 50px rgba(22,19,13,.18);aspect-ratio:4/3;object-fit:cover;width:100%;filter:saturate(.92)}
-.directory.alt{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.directory.alt{background:rgba(255,253,249,.35);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .food-group{font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.45rem;margin:44px 0 20px;color:var(--ink)}
 .food-group::after{content:"";display:block;width:56px;height:1px;background:var(--gold);margin-top:10px}
 .food-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:26px}
@@ -152,7 +152,7 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,4.6vw,3rem);let
 .sports-note{font-size:.85rem;opacity:.6;font-family:var(--serif);font-style:italic}
 
 /* Hotels pitch */
-.hotels{background:var(--ivory)}
+.hotels{background:transparent}
 .hotel-card{background:#14110a;color:var(--ivory);padding:60px 56px;display:grid;grid-template-columns:1.4fr 1fr;gap:44px;align-items:center;position:relative;border:1px solid var(--gold)}
 .hotel-card h2{color:var(--ivory)}
 .hotel-card p{opacity:.88;margin-bottom:14px}
