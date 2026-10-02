@@ -49,7 +49,7 @@ en: {
   "eat.m5": "La Classique",
   "eat.t6": "Brunch · $$ · Plateau",
   "eat.d6": "Inventive brunch plates in a bright, buzzing Plateau room.",
-  "eat.m6": "Duck confit hash",
+  "eat.m6": "See the current brunch menu",
   "eat.t7": "Bakery café · $$ · Old Montreal",
   "eat.d7": "Old Montreal's beloved bakery-café — worth the lineup.",
   "eat.m7": "Cubano sandwich",
@@ -201,7 +201,7 @@ fr: {
   "eat.m5": "La Classique",
   "eat.t6": "Brunch · $$ · Plateau",
   "eat.d6": "Des brunchs inventifs dans une salle lumineuse et animée du Plateau.",
-  "eat.m6": "Hachis de canard confit",
+  "eat.m6": "Voir le menu brunch actuel",
   "eat.t7": "Café-boulangerie · $$ · Vieux-Montréal",
   "eat.d7": "Le café-boulangerie adoré du Vieux-Montréal — la file vaut le coup.",
   "eat.m7": "Sandwich cubano",
@@ -304,7 +304,77 @@ fr: {
   "footer.note": "Les événements sont mis à jour quotidiennement — confirmez avec les salles."
 }};
 
-let lang = localStorage.getItem('mtl-guide-lang') || 'en';
+Object.assign(I18N.en, {
+  "nav.guides": "Plan your visit",
+  "hero.sub": "Practical Montreal itineraries, restaurants, nightlife and attractions — with dated event listings to help you choose.",
+  "hero.cta2": "Plan your visit",
+  "events.kicker": "Event directory",
+  "events.note": "Listings come from external event feeds and may change. Confirm the date, time and admission details with the organizer.",
+  "events.empty": "No upcoming events match this selection.",
+  "events.noMatch": "No events match your search. Try a performer, venue or date.",
+  "events.noMonth": "No matching events are listed for this month.",
+  "events.reset": "Reset filters",
+  "events.loading": "Loading event listings…",
+  "events.failed": "Event listings could not load. Please try again later; our planning guides are still available.",
+  "feed.stale": "This event snapshot is over 48 hours old. Some listings may have changed; check the organizer before making plans.",
+  "feed.unknown": "The last successful event refresh is not available. Verify listings with the organizer.",
+  "feed.current": "Event snapshot loaded. Check the organizer for current times and availability.",
+  "footer.note": "Check each event with its organizer before travelling.",
+  "guides.kicker": "Make the most of your time",
+  "guides.title": "Three practical guides for your visit",
+  "guides.intro": "Start with a realistic route, then choose your stops. Our planning guides explain the trade-offs: how much to fit into a day, when to use transit, and how to leave room for a meal before a show.",
+  "guides.first": "Your first day in Montreal",
+  "guides.firstDesc": "Old Montreal, the mountain and a neighbourhood meal, with rain and lower-walking alternatives.",
+  "guides.transit": "From the airport to your first outing",
+  "guides.transitDesc": "Choose a 747 route, check your fare and plan the final stretch to your hotel.",
+  "guides.evening": "Dinner and a show, without the rush",
+  "guides.eveningDesc": "Build an evening around your venue, understand ticket add-ons and plan your trip back.",
+  "guides.credit": "By Welcome Montreal editorial team · Researched planning guidance, published October 2, 2026. See each guide for sources and details to recheck.",
+  "trans.m1": "Check route, fare and last departure",
+  "trans.m2": "Check the price for your bike and ride length",
+  "trans.t2": "Bike share",
+  "eat.t6": "Brunch · $ · Rosemont",
+  "eat.d6": "A brunch option in Rosemont — check the current menu and opening hours.",
+  "attr.t4": "Basilica · Côte-des-Neiges",
+  "attr.d4": "Saint Joseph’s Oratory on Mount Royal — plan your approach before visiting."
+});
+Object.assign(I18N.fr, {
+  "nav.guides": "Préparer la visite",
+  "hero.sub": "Itinéraires pratiques, restaurants, vie nocturne et attractions à Montréal — avec un calendrier daté pour choisir vos sorties.",
+  "hero.cta2": "Préparer la visite",
+  "events.kicker": "Répertoire des événements",
+  "events.note": "Les annonces proviennent de calendriers externes et peuvent changer. Confirmez la date, l’heure et les conditions d’admission auprès de l’organisateur.",
+  "events.empty": "Aucun événement à venir ne correspond à cette sélection.",
+  "events.noMatch": "Aucun événement ne correspond à votre recherche. Essayez un artiste, une salle ou une date.",
+  "events.noMonth": "Aucun événement correspondant n’est inscrit pour ce mois.",
+  "events.reset": "Réinitialiser les filtres",
+  "events.loading": "Chargement des événements…",
+  "events.failed": "Impossible de charger les événements. Réessayez plus tard; nos guides pratiques restent accessibles.",
+  "feed.stale": "Ce calendrier date de plus de 48 heures. Certaines annonces ont pu changer; vérifiez auprès de l’organisateur avant de planifier votre sortie.",
+  "feed.unknown": "La date de la dernière actualisation réussie est inconnue. Vérifiez les annonces auprès de l’organisateur.",
+  "feed.current": "Calendrier chargé. Vérifiez les heures et les disponibilités auprès de l’organisateur.",
+  "footer.note": "Confirmez chaque événement auprès de son organisateur avant de vous déplacer.",
+  "guides.kicker": "Profiter de votre temps",
+  "guides.title": "Trois guides pratiques pour votre séjour",
+  "guides.intro": "Choisissez d’abord un trajet réaliste, puis vos arrêts. Nos guides expliquent les choix à faire : combien de visites prévoir, quand prendre le transport collectif et comment garder du temps pour manger avant un spectacle.",
+  "guides.first": "Votre première journée à Montréal",
+  "guides.firstDesc": "Le Vieux-Montréal, la montagne et un repas de quartier, avec des options par temps de pluie ou pour moins marcher.",
+  "guides.transit": "De l’aéroport à votre première sortie",
+  "guides.transitDesc": "Choisir un trajet de la 747, vérifier son titre et préparer la dernière étape vers l’hôtel.",
+  "guides.evening": "Un repas et un spectacle, sans courir",
+  "guides.eveningDesc": "Organiser la soirée autour de la salle, comprendre les suppléments et prévoir le retour.",
+  "guides.credit": "Par l’équipe éditoriale Welcome Montreal · Conseils de planification documentés, publiés le 2 octobre 2026. Sources et points à vérifier dans chaque guide.",
+  "trans.m1": "Vérifiez le trajet, le titre et le dernier départ",
+  "trans.m2": "Vérifiez le prix selon le vélo et la durée",
+  "trans.t2": "Vélos en libre-service",
+  "eat.t6": "Brunch · $ · Rosemont",
+  "eat.d6": "Une option brunch à Rosemont — vérifiez le menu et les heures d’ouverture.",
+  "attr.t4": "Basilique · Côte-des-Neiges",
+  "attr.d4": "L’Oratoire Saint-Joseph sur le mont Royal — préparez votre trajet avant la visite."
+});
+
+let feedState = 'loading';
+let lang = (() => { try { return localStorage.getItem('mtl-guide-lang') === 'fr' ? 'fr' : 'en'; } catch { return 'en'; } })();
 let eventsData = { updated: '', events: [] };
 let activeFilter = 'all';
 const CAT_LABEL = { concert: {en:'Concert', fr:'Concert'}, sport: {en:'Sport', fr:'Sport'}, show: {en:'Show', fr:'Spectacle'}, festival: {en:'Festival', fr:'Festival'} };
@@ -341,6 +411,8 @@ function applyLang(){
     el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph')));
   });
   document.getElementById('langToggle').textContent = lang === 'en' ? 'FR' : 'EN';
+  document.querySelectorAll('[data-guide]').forEach(a => { a.href = '/guides/' + a.dataset.guide + (lang === 'fr' ? '-fr' : '') + '.html'; });
+  updateFeedStatus();
   document.title = lang === 'en'
     ? 'Welcome to Montreal — Events, Food, Nightlife & More'
     : 'Bienvenue à Montréal — Événements, restos, vie nocturne';
@@ -358,15 +430,15 @@ function eventCard(e){
   const name = lang === 'fr' ? (e.name_fr || e.name) : e.name;
   const note = lang === 'fr' ? (e.note_fr || e.note) : e.note;
   const cat = (CAT_LABEL[e.category] && CAT_LABEL[e.category][lang]) || e.category;
-  const link = e.url ? '<a class="event-link" href="' + e.url + '" target="_blank" rel="noopener">' + t('events.tickets') + '</a>' : '';
+  const link = e.url ? '<a class="event-link" href="' + esc(e.url) + '" target="_blank" rel="noopener">' + t('events.tickets') + '</a>' : '';
   const thumb = '<span class="event-thumbwrap"><span class="event-thumb event-thumb--ph"><span>' + day + '</span></span>' +
-    (e.image ? '<img class="event-thumb event-thumb--img" src="' + e.image + '" alt="" loading="lazy" onerror="this.remove()">' : '') + '</span>';
+    (e.image ? '<img class="event-thumb event-thumb--img" src="' + esc(e.image) + '" alt="" loading="lazy" onerror="this.remove()">' : '') + '</span>';
   const cardCls = e.url ? 'event-card has-link' : 'event-card';
-  const cardUrl = e.url ? ' data-url="' + e.url.replace(/"/g, '&quot;') + '"' : '';
+  const cardUrl = e.url ? ' data-url="' + esc(e.url) + '"' : '';
   return '<article class="' + cardCls + '"' + cardUrl + '>' + thumb +
     '<div class="event-date"><div class="d">' + day + '</div><div class="m">' + mon + '</div></div>' +
-    '<div class="event-info"><span class="event-tag">' + cat + '</span><h3>' + name + '</h3>' +
-    '<p class="event-meta">' + e.venue + (note ? ' · ' + note : '') + '</p>' + link + '</div></article>';
+    '<div class="event-info"><span class="event-tag">' + esc(cat) + '</span><h3>' + esc(name) + '</h3>' +
+    '<p class="event-meta">' + esc(e.venue || '') + (e.time ? ' · ' + esc(e.time.slice(0,5)) : '') + (note ? ' · ' + esc(note) : '') + '</p>' + link + '</div></article>';
 }
 
 function dateQueryRange(q){
@@ -375,7 +447,7 @@ function dateQueryRange(q){
   const add = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
   if(/^(today|tonight)$/.test(q) || q.includes('ce soir') || q.includes("aujourd")) return [iso(t), iso(t)];
   if(q === 'tomorrow' || q.includes('demain')){ const d = add(t,1); return [iso(d), iso(d)]; }
-  if(q.includes('this week') || q.includes('cette semaine') || q === 'week' || q === 'semaine') return [iso(t), iso(add(t,7))];
+  if(q.includes('this week') && !q.includes('weekend') || q.includes('cette semaine') || q === 'week' || q === 'semaine') return [iso(t), iso(add(t,7))];
   if(q.includes('weekend') || q.includes('fin de semaine')){
     const dow = t.getDay();
     let fri;
@@ -492,7 +564,7 @@ function updateMapMarkers(){
     if(note) note.textContent = t('map.empty');
     return;
   }
-  mapLayer = L.layerGroup(pts.map(function(e){
+  mapLayer = L.featureGroup(pts.map(function(e){
     var m = L.circleMarker([e.lat, e.lon], {
       radius: 8, color: '#fffdf9', weight: 2,
       fillColor: CAT_COLOR[e.category] || '#a67c2e', fillOpacity: 0.92
@@ -566,7 +638,7 @@ function renderCalendar(){
   const showDay = selectedDay && selectedDay.startsWith(prefix) ? selectedDay : null;
   const list = showDay ? (byDay[showDay] || []) : Object.keys(byDay).sort().reduce((a,k) => a.concat(byDay[k]), []);
   if(!list.length){
-    html += '<p class="events-empty">' + t('events.empty') + '</p>';
+    html += emptyEvents(true);
   } else {
     if(showDay) html += '<h3 class="month-head">' + fmtDayLong(showDay) + '</h3>';
     html += list.map(eventCard).join('');
@@ -574,13 +646,29 @@ function renderCalendar(){
   grid.innerHTML = html;
 }
 
+function emptyEvents(month){
+  const key = searchQuery.trim() ? 'events.noMatch' : month ? 'events.noMonth' : 'events.empty';
+  return '<div class="events-empty"><p>' + esc(t(key)) + '</p><button class="btn btn-outline" id="resetEvents">' + esc(t('events.reset')) + '</button></div>';
+}
+function updateFeedStatus(){
+  const stamp = document.getElementById('eventsUpdated');
+  stamp.textContent = eventsData.updated || '—';
+  const el = document.getElementById('feedStatus');
+  const state = EventQuality.freshness(eventsData.updated);
+  el.textContent = feedState === 'error' ? t('events.failed') : feedState === 'loading' ? t('events.loading') : t('feed.' + state);
+  el.classList.toggle('is-stale', state !== 'current');
+}
 function renderEvents(){
+  if(feedState !== 'ready') {
+    document.getElementById('eventsGrid').innerHTML = '<p class="events-empty">' + esc(t(feedState === 'error' ? 'events.failed' : 'events.loading')) + '</p>';
+    return;
+  }
   if(view === 'map'){ renderMap(); return; }
   if(view === 'cal'){ renderCalendar(); return; }
   const grid = document.getElementById('eventsGrid');
   const list = filteredEvents();
   if(!list.length){
-    grid.innerHTML = '<p class="events-empty">' + t('events.empty') + '</p>';
+    grid.innerHTML = emptyEvents(false);
     return;
   }
   const shown = list.slice(0, visibleCount);
@@ -602,7 +690,7 @@ function renderEvents(){
 
 document.getElementById('langToggle').addEventListener('click', () => {
   lang = lang === 'en' ? 'fr' : 'en';
-  localStorage.setItem('mtl-guide-lang', lang);
+  try { localStorage.setItem('mtl-guide-lang', lang); } catch {};
   applyLang();
 });
 document.getElementById('menuToggle').addEventListener('click', () => {
@@ -631,6 +719,12 @@ document.getElementById('viewListBtn').addEventListener('click', () => setView('
 document.getElementById('viewCalBtn').addEventListener('click', () => setView('cal'));
 document.getElementById('viewMapBtn').addEventListener('click', () => setView('map'));
 document.getElementById('eventsGrid').addEventListener('click', (ev) => {
+  if(ev.target.closest('#resetEvents')){
+    searchQuery = ''; activeFilter = 'all'; selectedDay = null; calYear = null; calMonth = null;
+    document.getElementById('eventSearch').value = '';
+    document.querySelectorAll('#filterRow .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+    renderEvents(); return;
+  }
   if(ev.target.closest('#showMoreBtn')){
     visibleCount += 12;
     renderEvents();
@@ -663,15 +757,17 @@ document.getElementById('filterRow').addEventListener('click', (ev) => {
   renderEvents();
 });
 
-fetch('events.json')
-  .then(r => r.json())
+fetch('events.json', {cache: 'no-cache'})
+  .then(r => { if(!r.ok) throw new Error('Event feed unavailable'); return r.json(); })
   .then(data => {
-    eventsData = data;
-    document.getElementById('eventsUpdated').textContent = data.updated || '—';
+    if(!Array.isArray(data.events)) throw new Error('Invalid event feed');
+    eventsData = {...data, events: EventQuality.cleanEvents(data.events)};
+    feedState = 'ready';
+    updateFeedStatus();
     renderEvents();
   })
   .catch(() => {
-    document.getElementById('eventsGrid').innerHTML = '<p class="events-empty">' + t('events.empty') + '</p>';
+    feedState = 'error'; updateFeedStatus(); renderEvents();
   });
 
 loadWeather();

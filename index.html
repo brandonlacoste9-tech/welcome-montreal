@@ -4,14 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Welcome to Montreal — Events, Food, Nightlife & More</title>
-<meta name="description" content="Your living guide to Montreal: concerts, sports, restaurants, pubs, nightlife and attractions — updated daily.">
+<meta name="description" content="Plan your Montreal visit with practical itineraries, transport advice, restaurants, attractions and dated event listings.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4276130467303652"
-     crossorigin="anonymous"></script>
+<meta name="google-adsense-account" content="ca-pub-4276130467303652">
 </head>
 <body>
 <header class="site-header" id="top">
@@ -25,10 +24,10 @@
       <a href="#eat" data-i18n="nav.eat">Eat &amp; Drink</a>
       <a href="#nightlife" data-i18n="nav.nightlife">Nightlife</a>
       <a href="#attractions" data-i18n="nav.attractions">Attractions</a>
-      <a href="#stay" data-i18n="nav.stay">Stay</a>
+      <a href="#guides" data-i18n="nav.guides">Plan your visit</a>
       <a href="#transport" data-i18n="nav.transport">Getting around</a>
       <a href="#sports" data-i18n="nav.sports">Sports</a>
-      <a href="#hotels" data-i18n="nav.hotels">For Hotels</a>
+      <a href="/partners.html" data-i18n="nav.hotels">For Hotels</a>
     </nav>
     <div class="header-actions">
       <button class="lang-toggle" id="langToggle" aria-label="Switch language">FR</button>
@@ -38,6 +37,7 @@
 </header>
 
 <main>
+  <noscript><p class="container">Read our <a href="/guides/first-visit.html">first-visit guide</a>, <a href="/guides/airport-and-transit.html">airport guide</a> and <a href="/guides/evening-out.html">evening guide</a>. JavaScript is needed for event filters and the map.</p></noscript>
   <section class="hero">
     <img src="images/hero-skyline.jpg" alt="Montreal skyline at dusk" class="hero-bg">
     <div class="hero-shade"></div>
@@ -48,10 +48,10 @@
       </div>
       <p class="hero-kicker" data-i18n="hero.kicker">The city, live</p>
       <h1 data-i18n="hero.title">Welcome to Montreal</h1>
-      <p class="hero-sub" data-i18n="hero.sub">Concerts, games, restaurants, pubs, nightlife and landmarks — one guide that updates itself every day.</p>
+      <p class="hero-sub" data-i18n="hero.sub">Practical Montreal itineraries, restaurants, nightlife and attractions — with dated event listings to help you choose.</p>
       <div class="hero-cta">
         <a href="#events" class="btn btn-primary" data-i18n="hero.cta1">See what's on</a>
-        <a href="#hotels" class="btn btn-ghost" data-i18n="hero.cta2">Put this in your hotel</a>
+        <a href="#guides" class="btn btn-ghost" data-i18n="hero.cta2">Plan your visit</a>
       </div>
       <p class="hero-dateline"><span data-i18n="hero.caption">The skyline at dusk, from the Old Port</span> &nbsp;·&nbsp; <span data-i18n="hero.updated">Events updated</span>: <span id="eventsUpdated">—</span></p>
     </div>
@@ -69,6 +69,20 @@
     </div>
   </section>
 
+  <section class="planning" id="guides">
+    <div class="container">
+      <p class="section-kicker" data-i18n="guides.kicker">Make the most of your time</p>
+      <h2 data-i18n="guides.title">Three practical guides for your visit</h2>
+      <p class="planning-intro" data-i18n="guides.intro">Start with a realistic route, then choose your stops. Our planning guides explain the trade-offs: how much to fit into a day, when to use transit, and how to leave room for a meal before a show.</p>
+      <div class="guide-grid">
+        <a class="guide-card" href="/guides/first-visit.html" data-guide="first-visit"><span>01</span><h3 data-i18n="guides.first">Your first day in Montreal</h3><p data-i18n="guides.firstDesc">Old Montreal, the mountain and a neighbourhood meal, with rain and lower-walking alternatives.</p></a>
+        <a class="guide-card" href="/guides/airport-and-transit.html" data-guide="airport-and-transit"><span>02</span><h3 data-i18n="guides.transit">From the airport to your first outing</h3><p data-i18n="guides.transitDesc">Choose a 747 route, check your fare and plan the final stretch to your hotel.</p></a>
+        <a class="guide-card" href="/guides/evening-out.html" data-guide="evening-out"><span>03</span><h3 data-i18n="guides.evening">Dinner and a show, without the rush</h3><p data-i18n="guides.eveningDesc">Build an evening around your venue, understand ticket add-ons and plan your trip back.</p></a>
+      </div>
+      <p class="editorial-note" data-i18n="guides.credit">By Welcome Montreal editorial team · Researched planning guidance, published October 2, 2026. See each guide for sources and details to recheck.</p>
+    </div>
+  </section>
+
   <section class="events-section" id="events">
     <div class="container">
       <div class="weather-strip" id="weatherStrip" hidden>
@@ -78,7 +92,7 @@
       </div>
       <div class="section-head">
         <div>
-          <p class="section-kicker" data-i18n="events.kicker">Auto-updated daily</p>
+          <p class="section-kicker" data-i18n="events.kicker">Event directory</p>
           <h2 data-i18n="events.title">What's on in Montreal</h2>
         </div>
         <div class="events-toolbar">
@@ -97,8 +111,9 @@
         </div>
         </div>
       </div>
-      <div class="events-grid" id="eventsGrid"></div>
-      <p class="events-note" data-i18n="events.note">Listings refresh every morning. Always confirm times with the venue before heading out.</p>
+      <div class="events-grid" id="eventsGrid" aria-live="polite"></div>
+      <p id="feedStatus" class="feed-status" role="status"></p>
+      <p class="events-note" data-i18n="events.note">Listings come from external event feeds and may change. Confirm the date, time and admission details with the organizer.</p>
     </div>
   </section>
 
@@ -159,10 +174,10 @@
         <a class="food-card card-link" href="https://reginecafe.ca" target="_blank" rel="noopener">
           <img src="images/eat-regine.jpg" alt="Régine Café" loading="lazy">
           <div class="food-body">
-            <p class="food-tags" data-i18n="eat.t6">Brunch · $$ · Plateau</p>
+            <p class="food-tags" data-i18n="eat.t6">Brunch · $$ · Rosemont</p>
             <h4>Régine Café</h4>
-            <p data-i18n="eat.d6">Inventive brunch plates in a bright, buzzing Plateau room.</p>
-            <p class="food-dish"><span data-i18n="eat.try">Must-try:</span> <span data-i18n="eat.m6">Duck confit hash</span></p>
+            <p data-i18n="eat.d6">A brunch option in Rosemont — check the current menu and opening hours.</p>
+            <p class="food-dish"><span data-i18n="eat.try">Must-try:</span> <span data-i18n="eat.m6">See the current brunch menu</span></p>
           </div>
         </a>
         <a class="food-card card-link" href="https://oliveetgourmando.com" target="_blank" rel="noopener">
@@ -335,9 +350,9 @@
         <a class="food-card card-link" href="https://www.osj.qc.ca" target="_blank" rel="noopener">
           <img src="images/attr-oratoire.jpg" alt="Oratoire Saint-Joseph" loading="lazy">
           <div class="food-body">
-            <p class="food-tags" data-i18n="attr.t4">Basilica · Westmount</p>
+            <p class="food-tags" data-i18n="attr.t4">Basilica · Côte-des-Neiges</p>
             <h4>Oratoire Saint-Joseph</h4>
-            <p data-i18n="attr.d4">The domed basilica on Westmount's summit.</p>
+            <p data-i18n="attr.d4">Saint Joseph’s Oratory on Mount Royal — plan your approach before visiting.</p>
             <p class="food-dish"><span data-i18n="attr.try">Don't miss:</span> <span data-i18n="attr.m4">The 283 steps</span></p>
           </div>
         </a>
@@ -384,29 +399,6 @@
     </div>
   </section>
 
-  <section class="directory alt" id="stay">
-    <div class="container">
-      <div class="dir-split">
-        <div class="dir-img"><img src="images/stay-lobby.jpg" alt="Hotel lobby" loading="lazy"></div>
-        <div class="dir-body">
-          <p class="section-kicker" data-i18n="stay.kicker">Partner hotels</p>
-          <h2 data-i18n="stay.title">Where to stay</h2>
-          <p data-i18n="stay.body">Hotels that display our guide get featured here — seen by every guest who scans the QR in their lobby.</p>
-          <div class="food-grid">
-            <article class="food-card partner-card">
-              <div class="food-body">
-                <p class="food-tags" data-i18n="stay.t1">Your hotel here</p>
-                <h4 data-i18n="stay.h1">Feature your hotel</h4>
-                <p data-i18n="stay.d1">Put our QR code in your lobby or rooms and your hotel gets listed in this guide — free during the pilot.</p>
-                <p class="food-dish"><a class="event-link" href="mailto:info@montrealguide.ca?subject=Hotel%20partnership" data-i18n="stay.cta">Become a partner</a></p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="directory" id="transport">
     <div class="container">
       <p class="section-kicker" data-i18n="trans.kicker">Getting around</p>
@@ -418,16 +410,16 @@
             <p class="food-tags" data-i18n="trans.t1">Transit · 4 lines</p>
             <h4>Metro</h4>
             <p data-i18n="trans.d1">Four metro lines cover the whole core — fast, cheap, runs late.</p>
-            <p class="food-dish"><span data-i18n="trans.try">Tip:</span> <span data-i18n="trans.m1">OPUS card or contactless</span></p>
+            <p class="food-dish"><span data-i18n="trans.try">Tip:</span> <span data-i18n="trans.m1">Check route, fare and last departure</span></p>
           </div>
         </a>
         <a class="food-card card-link" href="https://bixi.com" target="_blank" rel="noopener">
           <img src="images/trans-bixi.jpg" alt="BIXI bikes" loading="lazy">
           <div class="food-body">
-            <p class="food-tags" data-i18n="trans.t2">Bike share · Apr–Nov</p>
+            <p class="food-tags" data-i18n="trans.t2">Bike share</p>
             <h4>BIXI</h4>
             <p data-i18n="trans.d2">Thousands of shared bikes at docks all over downtown.</p>
-            <p class="food-dish"><span data-i18n="trans.try">Tip:</span> <span data-i18n="trans.m2">30-minute rides included</span></p>
+            <p class="food-dish"><span data-i18n="trans.try">Tip:</span> <span data-i18n="trans.m2">Check the price for your bike and ride length</span></p>
           </div>
         </a>
         <a class="food-card card-link" href="https://www.stm.info/en" target="_blank" rel="noopener">
@@ -465,38 +457,20 @@
     </div>
   </section>
 
-  <section class="hotels" id="hotels">
-    <div class="container">
-      <div class="hotel-card">
-        <div>
-          <p class="section-kicker" data-i18n="hotels.kicker">For hotels &amp; hosts</p>
-          <h2 data-i18n="hotels.title">Put Montreal in every room</h2>
-          <p data-i18n="hotels.body">One QR code on the nightstand gives your guests the whole city — tonight's concerts, the game, where to eat, what to see. Always current, zero printing costs, and it answers the front desk's most-asked question before it's asked.</p>
-          <ul class="hotel-points">
-            <li data-i18n="hotels.p1">Your hotel's branded version with your logo</li>
-            <li data-i18n="hotels.p2">Events refresh automatically every morning</li>
-            <li data-i18n="hotels.p3">Bilingual — English and French out of the box</li>
-          </ul>
-        </div>
-        <div class="hotel-cta">
-          <a class="btn btn-primary" href="mailto:info@montrealguide.ca?subject=Hotel%20guide%20QR" data-i18n="hotels.cta">Get your hotel's QR code</a>
-          <p class="hotel-sub" data-i18n="hotels.sub">Pilot program — first hotels get featured placement free.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+
 </main>
 
 <footer class="site-footer">
   <div class="container footer-inner">
     <p><strong data-i18n="brand">Welcome to Montreal</strong> · <span data-i18n="footer.tag">The city, live.</span></p>
-    <p class="footer-small" data-i18n="footer.note">Event listings update daily — confirm details with venues.</p>
+    <p class="footer-small" data-i18n="footer.note">Check each event with its organizer before travelling.</p>
     <p class="footer-small"><a href="mailto:info@montrealguide.ca">info@montrealguide.ca</a></p>
     <p class="footer-small"><a href="/about.html">About</a> · <a href="/privacy.html">Privacy Policy</a></p>
   </div>
 </footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="event-quality.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

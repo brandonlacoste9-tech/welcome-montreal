@@ -15,15 +15,20 @@ import base64
 import datetime as dt
 import json
 import os
+import re
+import unicodedata
 import subprocess
 import sys
 import urllib.parse
 import urllib.request
 
 sys.path.insert(0, "/opt/hatch/skills/skill-creator/bin")
-import dynamic_credentials as dc  # noqa: E402
+try:
+    import dynamic_credentials as dc  # noqa: E402
+except ImportError:
+    dc = None
 
-REPO_DIR = "/home/hatch/workspace/welcome-montreal"
+REPO_DIR = os.path.dirname(os.path.abspath(__file__))
 OWNER, REPO = "brandonlacoste9-tech", "welcome-montreal"
 TM_HOST = "app.ticketmaster.com"
 TS_EVENTS_URL = ("https://api-v3.tourinsoft.com/api/syndications/"
@@ -76,6 +81,8 @@ def fetch_events():
         base += f"&apikey={urllib.parse.quote(direct.strip(), safe='')}"
         url = base
     else:
+        if dc is None:
+            raise RuntimeError('Ticketmaster credentials unavailable')
         url = dc.url_with_surrogate_query_param(base, "custom.ticketmaster", allowed_hosts=[TM_HOST])
     req = urllib.request.Request(url, headers={"User-Agent": "welcome-montreal/1.0"})
     with urllib.request.urlopen(req, timeout=90) as resp:
@@ -238,7 +245,24 @@ def to_city_events(rows, today, cutoff):
 
 
 def norm_name(name):
-    return "".join(c for c in name.lower() if c.isalnum())
+    return "".join(c for c in unicodedata.normalize('NFD', name.lower()) if c.isalnum())
+
+
+def event_key(event):
+    return (norm_name(event['name']), norm_name(event.get('venue', '')), event['date'], event.get('time', ''))
+
+
+def clean_events(events):
+    result = []
+    seen = set()
+    for event in events:
+        if re.search(r'ticketless|surclassement|vip\s+upgrade|salon des directeurs|repas restaurant|parking|stationnement', event['name'], re.I):
+            continue
+        key = event_key(event)
+        if key not in seen:
+            seen.add(key)
+            result.append(event)
+    return sorted(result, key=lambda e: (e['date'], e.get('time', '')))
 
 
 def main():
@@ -248,8 +272,8 @@ def main():
 
     try:
         data = fetch_events()
-    except dc.DynamicCredentialError as exc:
-        print(f"no ticketmaster key stored yet ({exc}); ticketmaster skipped")
+    except Exception:
+        print('Ticketmaster refresh failed; existing snapshot will be retained')
         data = None
     tm_events = []
     if data:
@@ -264,6 +288,7 @@ def main():
                 tm_events.append(_with_coords({
                     "name": e.get("name", ""),
                     "date": (e.get("dates") or {}).get("start", {}).get("localDate", ""),
+                    "time": (e.get("dates") or {}).get("start", {}).get("localTime", ""),
                     "venue": venue,
                     "category": to_category(e),
                     "url": e.get("url", ""),
@@ -280,12 +305,12 @@ def main():
         ts_data = None
     ts_events = to_tourinsoft_events(ts_data or {}, today_s, cutoff) if ts_data else []
 
-    seen = {norm_name(e["name"]) for e in tm_events}
+    seen = {event_key(e) for e in tm_events}
     merged = list(tm_events)
     added_ts = 0
     per_cat = {}
     for e in ts_events:  # already date-sorted; per-category caps keep the mix
-        key = norm_name(e["name"])
+        key = event_key(e)
         n = per_cat.get(e["category"], 0)
         if key in seen or n >= TS_PER_CAT:
             continue
@@ -304,7 +329,7 @@ def main():
         city_events = to_city_events(city_rows, today_s, cutoff)
         city_per_cat = {}
         for e in city_events:
-            key = norm_name(e["name"])
+            key = event_key(e)
             n = city_per_cat.get(e["category"], 0)
             if key in seen or n >= CITY_PER_CAT:
                 continue
@@ -313,9 +338,16 @@ def main():
             merged.append(e)
             added_city += 1
 
-    payload = {"updated": today_s, "events": merged}
-    with open(f"{REPO_DIR}/events.json", "w", encoding="utf-8") as fh:
+    # Never replace a complete snapshot with a partial refresh or a new date.
+    if data is None or ts_data is None or city_rows is None:
+        print('Incomplete refresh: events.json and its timestamp were not changed')
+        return 1
+    payload = {"updated": dt.datetime.now(dt.timezone.utc).isoformat(), "events": clean_events(merged)}
+    with open(f"{REPO_DIR}/events.json.tmp", "w", encoding="utf-8") as fh:
         json.dump(payload, fh, ensure_ascii=False)
+    os.replace(f"{REPO_DIR}/events.json.tmp", f"{REPO_DIR}/events.json")
+    if '--output-only' in sys.argv:
+        return 0
     run("git", "add", "events.json")
     if not run("git", "status", "--porcelain"):
         print("no changes")

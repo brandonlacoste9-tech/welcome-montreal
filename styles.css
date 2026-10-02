@@ -222,3 +222,17 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,4.6vw,3rem);let
   .filter-row{justify-content:flex-start}
   .masthead-meta{font-size:.62rem;letter-spacing:1.8px}
 }
+
+/* Editorial guides and honest feed states */
+.planning{background:var(--ivory);border-bottom:1px solid var(--line)}
+.planning-intro{max-width:760px;margin-bottom:28px;font-size:1.05rem}
+.guide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.guide-card{display:block;text-decoration:none;border-top:2px solid var(--gold);padding:24px 0}
+.guide-card>span{font-family:var(--serif);font-size:1.6rem;color:var(--gold)}
+.guide-card h3{font-family:var(--serif);font-size:1.55rem;line-height:1.2;margin:12px 0}
+.guide-card:hover h3{text-decoration:underline;text-underline-offset:4px}
+.guide-card p,.editorial-note{color:#5f5547}.editorial-note{font-size:.83rem;margin-top:24px}
+.feed-status{padding:12px 16px;border-left:3px solid var(--gold);margin-top:24px;font-size:.9rem}
+.feed-status.is-stale{background:#fff3d5;color:#554014}
+.events-empty p{margin-bottom:16px}.events-empty .btn{margin-top:12px;cursor:pointer}
+@media(max-width:700px){.guide-grid{grid-template-columns:1fr;gap:6px}.planning{padding:42px 0}}
